@@ -19,7 +19,6 @@ namespace ConvertXMLToExcell
         public Form1()
         {
             InitializeComponent();
-
             rdExcelToXML.Checked = true;
         }
 
@@ -43,7 +42,10 @@ namespace ConvertXMLToExcell
             foreach(var item in temp)
             {
                 if(!string.IsNullOrWhiteSpace(item.English) && !string.IsNullOrWhiteSpace(item.NewLang))
-                    text = text.Replace(item.English, item.NewLang);
+                {
+                    var regex = new Regex(Regex.Escape(item.English));
+                    text = regex.Replace(text, item.NewLang, 1);
+                }
             }
             
             File.WriteAllText(path, text);
@@ -251,7 +253,6 @@ namespace ConvertXMLToExcell
             foreach (HtmlAgilityPack.HtmlTextNode node in doc.DocumentNode.SelectNodes("//text()"))
             {
                 string temp = node.Text;
-                temp = Regex.Replace(temp, @"\s", string.Empty);
                 if (!string.IsNullOrEmpty(temp))
                     listStr.Add(temp);
             }
